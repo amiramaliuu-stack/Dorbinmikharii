@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>dorbinbekharbaba</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{font-family:Tahoma,Arial,sans-serif;color:#fff;background:#050505}
+body:before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 50% 8%,#590000 0,#1d0000 30%,#050505 72%);z-index:-2}
+body:after{content:"";position:fixed;inset:-30%;background:linear-gradient(115deg,transparent 35%,#ff17170b 50%,transparent 65%);animation:shine 7s linear infinite;z-index:-1}
+@keyframes shine{from{transform:translateX(-20%) rotate(3deg)}to{transform:translateX(20%) rotate(3deg)}}
+#app{width:100%;height:100%;display:grid;place-items:center;padding:clamp(18px,4vw,60px)}
+.card{width:min(900px,94vw);max-height:94vh;overflow:auto;padding:clamp(28px,5vw,60px);border:1px solid #ff303055;border-radius:30px;background:#080808e8;backdrop-filter:blur(18px);box-shadow:0 25px 100px #000,0 0 60px #c0000022;animation:enter .45s ease}
+@keyframes enter{from{opacity:0;transform:translateY(22px) scale(.98)}to{opacity:1;transform:none}}
+.logo{text-align:center;color:#ff3030;font-weight:800;letter-spacing:1px;font-size:14px;margin-bottom:25px}
+.title{text-align:center;font-size:clamp(28px,5vw,48px);line-height:1.55;margin:0 0 35px;font-weight:800}
+.buttons{display:grid;grid-template-columns:1fr 1fr;gap:16px}.btn,.select,.option{border:1px solid #ffffff1c;background:#151515;color:#fff;border-radius:15px;padding:17px;font:inherit;font-weight:700;cursor:pointer;transition:.18s}
+.btn:hover,.option:hover,.select:hover{transform:translateY(-2px);border-color:#ff3030}
+.yes{background:linear-gradient(135deg,#ff3838,#970000);border:0;box-shadow:0 10px 35px #c0000033}
+.form{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.field{min-width:0}.label{display:block;font-weight:700;margin-bottom:9px}.select{width:100%;text-align:right}.options{display:grid;gap:8px;margin-top:8px}.option{padding:14px}.chosen{background:#3a0909!important;border-color:#ff3030!important;box-shadow:0 0 18px #ff00001c}.disabled{opacity:.42;cursor:not-allowed!important;transform:none!important}.error{display:none;margin-top:9px;padding:11px;border-radius:12px;background:#390707;color:#ff8888;border:1px solid #ff303055}.submit{grid-column:1/-1;width:100%;margin-top:8px}
+.thanks{text-align:center}.emoji{font-size:70px;display:block;margin:5px auto 15px}.thanks h1{font-size:clamp(28px,5vw,46px);line-height:1.7}
+@media(max-width:700px){#app{padding:10px}.card{width:100%;max-height:96vh;border-radius:22px;padding:25px 18px}.form{grid-template-columns:1fr}.submit{grid-column:auto}.title{margin-bottom:25px}.buttons{gap:10px}.btn{padding:15px 10px}}
+</style>
+</head>
+<body><main id="app"></main>
+<script>
+const app=document.getElementById('app');
+const state={model:'',when:'',truth:false};
+
+function home(){
+app.innerHTML=`<section class="card"><div class="logo">dorbinbekharbaba</div>
+<h1 class="title">برام دوربین <span style="color:#ff3030">GOPRO</span> میخری؟</h1>
+<div class="buttons"><button class="btn" id="no">خیر</button><button class="btn yes" id="yes">بله ❤️</button></div></section>`;
+document.getElementById('no').onclick=()=>document.getElementById('no').animate(
+[{transform:'translateX(0)'},{transform:'translateX(-8px)'},{transform:'translateX(8px)'},{transform:'translateX(0)'}],{duration:280});
+document.getElementById('yes').onclick=form;
+}
+
+function form(){
+app.innerHTML=`<section class="card"><div class="logo">dorbinbekharbaba</div>
+<h1 class="title" style="font-size:clamp(25px,4vw,36px)">پس قولمون قطعه 😎</h1>
+<div class="form">
+<div class="field"><span class="label">مدل دوربین خود را وارد کنید</span>
+<div class="select" id="modelSelect">انتخاب مدل ▾</div>
+<div class="options" id="models" hidden>
+<div class="option" data-value="Gopro 11 hero black">Gopro 11 hero black</div>
+<div class="option" data-value="Gopro 12 hero black">Gopro 12 hero black</div>
+<div class="option" data-value="Gopro 13 hero black">Gopro 13 hero black</div></div></div>
+
+<div class="field"><span class="label">کی میخری برام؟</span>
+<div class="select" id="whenSelect">انتخاب زمان ▾</div>
+<div class="options" id="whens" hidden>
+<div class="option" data-value="همین الان">همین الان</div>
+<div class="option" data-value="فردا">فردا</div>
+<div class="option" data-value="پس فردا">پس فردا</div></div></div>
+
+<div class="field"><span class="label">دروغ که نمیگی؟ 🫤</span>
+<div class="options" style="margin-top:0">
+<div class="option disabled" id="lie">چرا دروغ گفتم</div>
+<div class="option" id="truth">نه دروغ نمیگیم</div></div>
+<div class="error" id="error">دروغگو دروغ نگو 😐</div></div>
+
+<button class="btn yes submit" id="finish">ثبت قول 🤝</button>
+</div></section>`;
+
+const ms=document.getElementById('modelSelect'), ws=document.getElementById('whenSelect');
+const mo=document.getElementById('models'), wo=document.getElementById('whens');
+
+ms.onclick=()=>{mo.hidden=!mo.hidden;wo.hidden=true};
+ws.onclick=()=>{wo.hidden=!wo.hidden;mo.hidden=true};
+
+document.querySelectorAll('#models .option').forEach(o=>o.onclick=()=>{
+ state.model=o.dataset.value;
+ ms.textContent=o.dataset.value;
+ document.querySelectorAll('#models .option').forEach(x=>x.classList.remove('chosen'));
+ o.classList.add('chosen'); mo.hidden=true;
+});
+document.querySelectorAll('#whens .option').forEach(o=>o.onclick=()=>{
+ state.when=o.dataset.value;
+ ws.textContent=o.dataset.value;
+ document.querySelectorAll('#whens .option').forEach(x=>x.classList.remove('chosen'));
+ o.classList.add('chosen'); wo.hidden=true;
+});
+document.getElementById('lie').onclick=()=>{
+ const e=document.getElementById('error');
+ e.textContent='دروغگو دروغ نگو 😐';e.style.display='block';
+};
+document.getElementById('truth').onclick=()=>{
+ state.truth=true;document.getElementById('truth').classList.add('chosen');
+ document.getElementById('error').style.display='none';
+};
+document.getElementById('finish').onclick=()=>{
+ if(state.model&&state.when&&state.truth) thanks();
+ else {const e=document.getElementById('error');e.textContent='همه گزینه‌ها رو انتخاب کن 😎';e.style.display='block';}
+};
+}
+function thanks(){
+app.innerHTML=`<section class="card thanks"><div class="logo">dorbinbekharbaba</div>
+<span class="emoji">😍</span><h1>ممنونم که دوربینو برام میخری😍</h1>
+<p style="color:#aaa;font-size:18px">قولت ثبت شد ❤️</p></section>`;
+}
+home();
+</script></body></html>
